@@ -29,12 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            actions: const [
+            actions: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Icon(
-                  Icons.saved_search_rounded,
-                  color: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, Routers.search),
+                  child: const Icon(
+                    Icons.saved_search_rounded,
+                    color: Colors.black,
+                  ),
                 ),
               )
             ],

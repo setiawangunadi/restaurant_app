@@ -18,9 +18,11 @@ class ApiService {
 
   factory ApiService() => _instance;
 
-  Future<Response> get({required String path}) async {
+  Future<Response> get(
+      {required String path, Map<String, dynamic>? queryParameters}) async {
     try {
-      final response = await dio.get('$baseUrl$path');
+      final response =
+          await dio.get('$baseUrl$path', queryParameters: queryParameters);
       return response;
     } catch (e) {
       throw Exception(e);
