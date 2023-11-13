@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/blocs/home/home_bloc.dart';
 import 'package:restaurant_app/config/data/local/constants.dart';
+import 'package:restaurant_app/routers.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -54,62 +55,72 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: ListView.builder(
                       itemCount: state.listRestaurantModel.count,
                       itemBuilder: (context, index) {
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          margin: const EdgeInsets.only(top: 16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow,
-                            borderRadius: BorderRadius.circular(8.0),
+                        return GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            Routers.detail,
+                            arguments: state
+                                .listRestaurantModel.restaurants?[index].id,
                           ),
-                          child: Row(
-                            children: [
-                              Image.network(
-                                "$baseUrlImage/${state.listRestaurantModel.restaurants?[index].pictureId}",
-                                width: 100,
-                              ),
-                              const SizedBox(width: 16),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    state.listRestaurantModel
-                                            .restaurants?[index].name ??
-                                        "",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            margin: const EdgeInsets.only(top: 16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Image.network(
+                                  "$baseUrlImage/${state.listRestaurantModel.restaurants?[index].pictureId}",
+                                  width: 100,
+                                ),
+                                const SizedBox(width: 16),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      state.listRestaurantModel
+                                              .restaurants?[index].name ??
+                                          "",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on_outlined,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(state.listRestaurantModel
-                                              .restaurants?[index].city ??
-                                          ""),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Icon(
-                                        Icons.star,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(state.listRestaurantModel
-                                              .restaurants?[index].rating
-                                              .toString() ??
-                                          ""),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            ],
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Icon(
+                                          Icons.location_on_outlined,
+                                          size: 16,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(state.listRestaurantModel
+                                                .restaurants?[index].city ??
+                                            ""),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Icon(
+                                          Icons.star,
+                                          size: 16,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(state.listRestaurantModel
+                                                .restaurants?[index].rating
+                                                .toString() ??
+                                            ""),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },
