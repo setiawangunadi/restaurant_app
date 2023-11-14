@@ -20,6 +20,7 @@ class DetailRestaurantBloc
   DetailRestaurantBloc() : super(DetailRestaurantInitial()) {
     on<GetDetailRestaurant>(getDetailRestaurant);
     on<DoFavoriteRestaurant>(doFavoriteRestaurant);
+    on<DoDeleteRestaurant>(doDeleteRestaurant);
   }
 
   Future<void> getDetailRestaurant(
@@ -52,14 +53,31 @@ class DetailRestaurantBloc
       final FavoriteRestaurant favoriteRestaurant = FavoriteRestaurant();
       favoriteRestaurant.name = event.detailRestaurantResponse.restaurant?.name;
       favoriteRestaurant.id = event.detailRestaurantResponse.restaurant?.id;
-      favoriteRestaurant.pictureId = event.detailRestaurantResponse.restaurant?.pictureId;
-      favoriteRestaurant.description = event.detailRestaurantResponse.restaurant?.description;
+      favoriteRestaurant.pictureId =
+          event.detailRestaurantResponse.restaurant?.pictureId;
+      favoriteRestaurant.description =
+          event.detailRestaurantResponse.restaurant?.description;
       favoriteRestaurant.city = event.detailRestaurantResponse.restaurant?.city;
       final response =
           await DbProvider().addRestaurantFavorite(favoriteRestaurant);
       if (response == "Success Add To List Favorite Restaurant") {
         emit(OnSuccessAddFavorite(message: response));
       }
+    } on SocketException catch (e) {
+      emit(OnFailedDetailRestaurant(message: e.toString()));
+    } catch (e) {
+      emit(OnFailedDetailRestaurant(message: e.toString()));
+    }
+  }
+
+  Future<void> doDeleteRestaurant(
+    DoDeleteRestaurant event,
+    Emitter<DetailRestaurantState> emit,
+  ) async {
+    try {
+      emit(OnLoadingDetailRestaurant());
+      final response = await DbProvider().deleteRestaurantFavorite(event.id);
+      emit(OnSuccessDeleteFavorite(message: response));
     } on SocketException catch (e) {
       emit(OnFailedDetailRestaurant(message: e.toString()));
     } catch (e) {

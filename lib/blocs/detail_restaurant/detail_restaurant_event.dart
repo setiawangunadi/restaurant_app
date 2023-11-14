@@ -14,3 +14,9 @@ class DoFavoriteRestaurant extends DetailRestaurantEvent {
 
   DoFavoriteRestaurant({required this.detailRestaurantResponse});
 }
+
+class DoDeleteRestaurant extends DetailRestaurantEvent {
+  final String id;
+
+  DoDeleteRestaurant({required this.id});
+}

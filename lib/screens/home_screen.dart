@@ -30,6 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             actions: [
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, Routers.favorite),
+                child: const Icon(
+                  Icons.favorite,
+                  color: Colors.black,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: GestureDetector(
@@ -39,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.black,
                   ),
                 ),
-              )
+              ),
             ],
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -62,8 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () => Navigator.pushNamed(
                             context,
                             Routers.detail,
-                            arguments: state
-                                .listRestaurantModel.restaurants?[index].id,
+                            arguments: [
+                              state.listRestaurantModel.restaurants?[index].id,
+                              "home",
+                            ],
                           ),
                           child: Container(
                             padding: const EdgeInsets.all(16.0),

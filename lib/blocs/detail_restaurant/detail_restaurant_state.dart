@@ -19,6 +19,12 @@ class OnSuccessAddFavorite extends DetailRestaurantState {
   OnSuccessAddFavorite({required this.message});
 }
 
+class OnSuccessDeleteFavorite extends DetailRestaurantState {
+  final String message;
+
+  OnSuccessDeleteFavorite({required this.message});
+}
+
 class OnFailedDetailRestaurant extends DetailRestaurantState {
   final String message;
   final int? statusCode;

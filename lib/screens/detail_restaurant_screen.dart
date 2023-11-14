@@ -3,11 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/blocs/detail_restaurant/detail_restaurant_bloc.dart';
 import 'package:restaurant_app/config/data/local/constants.dart';
 import 'package:restaurant_app/config/models/detail_restaurant_response.dart';
+import 'package:restaurant_app/routers.dart';
 
 class DetailRestaurantScreen extends StatefulWidget {
   final String id;
+  final String type;
 
-  const DetailRestaurantScreen({super.key, required this.id});
+  const DetailRestaurantScreen({
+    super.key,
+    required this.id,
+    required this.type,
+  });
 
   @override
   State<DetailRestaurantScreen> createState() => _DetailRestaurantScreenState();
@@ -24,16 +30,26 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     super.initState();
   }
 
+  goFavorite() async {
+    await Navigator.pushNamed(context, Routers.favorite);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DetailRestaurantBloc, DetailRestaurantState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is OnSuccessGetDetailRestaurant) {
           setState(() {
             detailRestaurantResponse = state.detailRestaurantResponse;
           });
         }
         if (state is OnSuccessAddFavorite) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.message),
+          ));
+        }
+        if (state is OnSuccessDeleteFavorite) {
+          goFavorite();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(state.message),
           ));
@@ -49,7 +65,6 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
             physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
-                // if (state is OnSuccessGetDetailRestaurant)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -235,13 +250,17 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => detailRestaurantBloc.add(
-              DoFavoriteRestaurant(
-                detailRestaurantResponse:
-                    detailRestaurantResponse ?? DetailRestaurantResponse(),
-              ),
+              widget.type == "home"
+                  ? DoFavoriteRestaurant(
+                      detailRestaurantResponse: detailRestaurantResponse ??
+                          DetailRestaurantResponse(),
+                    )
+                  : DoDeleteRestaurant(
+                      id: widget.id,
+                    ),
             ),
             backgroundColor: Colors.red,
-            child: const Icon(Icons.favorite),
+            child: Icon(widget.type == "home" ? Icons.favorite : Icons.delete),
           ),
         );
       },
