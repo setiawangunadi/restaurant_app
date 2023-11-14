@@ -8,3 +8,9 @@ class GetDetailRestaurant extends DetailRestaurantEvent {
 
   GetDetailRestaurant({required this.id});
 }
+
+class DoFavoriteRestaurant extends DetailRestaurantEvent {
+  final DetailRestaurantResponse detailRestaurantResponse;
+
+  DoFavoriteRestaurant({required this.detailRestaurantResponse});
+}

@@ -13,9 +13,9 @@ class OnSuccessSearch extends SearchState {
   OnSuccessSearch({required this.searchResponse});
 }
 
-class OnFailedHome extends SearchState {
+class OnFailedSearch extends SearchState {
   final String message;
   final int? statusCode;
 
-  OnFailedHome({required this.message, this.statusCode});
+  OnFailedSearch({required this.message, this.statusCode});
 }

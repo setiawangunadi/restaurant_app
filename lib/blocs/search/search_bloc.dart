@@ -28,9 +28,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         emit(OnSuccessSearch(searchResponse: searchResponse));
       }
     } on SocketException catch (e) {
-      emit(OnFailedHome(message: e.toString()));
+      emit(OnFailedSearch(message: e.toString()));
     } catch (e) {
-      emit(OnFailedHome(message: e.toString()));
+      emit(OnFailedSearch(message: e.toString()));
     }
   }
 }

@@ -10,8 +10,13 @@ class OnLoadingDetailRestaurant extends DetailRestaurantState {}
 class OnSuccessGetDetailRestaurant extends DetailRestaurantState {
   final DetailRestaurantResponse detailRestaurantResponse;
 
-  //
   OnSuccessGetDetailRestaurant({required this.detailRestaurantResponse});
+}
+
+class OnSuccessAddFavorite extends DetailRestaurantState {
+  final String message;
+
+  OnSuccessAddFavorite({required this.message});
 }
 
 class OnFailedDetailRestaurant extends DetailRestaurantState {
