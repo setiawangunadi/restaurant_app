@@ -13,6 +13,12 @@ class OnSuccessGetRestaurant extends HomeState {
   OnSuccessGetRestaurant({required this.listRestaurantModel});
 }
 
+class OnSuccessSetNotification extends HomeState {
+  final String id;
+
+  OnSuccessSetNotification({required this.id});
+}
+
 class OnFailedHome extends HomeState {
   final String message;
   final int? statusCode;

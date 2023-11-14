@@ -4,16 +4,19 @@ import 'package:restaurant_app/blocs/detail_restaurant/detail_restaurant_bloc.da
 import 'package:restaurant_app/blocs/favorite/favorite_bloc.dart';
 import 'package:restaurant_app/blocs/home/home_bloc.dart';
 import 'package:restaurant_app/blocs/search/search_bloc.dart';
+import 'package:restaurant_app/blocs/setting/setting_bloc.dart';
 import 'package:restaurant_app/screens/detail_restaurant_screen.dart';
 import 'package:restaurant_app/screens/favorite_screen.dart';
 import 'package:restaurant_app/screens/home_screen.dart';
 import 'package:restaurant_app/screens/search_screen.dart';
+import 'package:restaurant_app/screens/setting_screen.dart';
 
 class Routers {
   static const String home = "/home";
   static const String detail = "/detail";
   static const String search = "/search";
   static const String favorite = "/favorite";
+  static const String setting = "/setting";
 
   final route = <String, WidgetBuilder>{
     Routers.home: (BuildContext context) {
@@ -43,6 +46,12 @@ class Routers {
       return BlocProvider(
         create: (context) => FavoriteBloc(),
         child: const FavoriteScreen(),
+      );
+    },
+    Routers.setting: (BuildContext context) {
+      return BlocProvider(
+        create: (context) => SettingBloc(),
+        child: const SettingScreen(),
       );
     },
   };
