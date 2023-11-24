@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurant_app/blocs/detail_restaurant/detail_restaurant_bloc.dart';
 import 'package:restaurant_app/config/data/local/constants.dart';
-import 'package:restaurant_app/config/models/detail_restaurant_response.dart';
 import 'package:restaurant_app/routers.dart';
 
 class DetailRestaurantScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class DetailRestaurantScreen extends StatefulWidget {
 
 class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   late DetailRestaurantBloc detailRestaurantBloc;
-  DetailRestaurantResponse? detailRestaurantResponse;
 
   @override
   void initState() {
@@ -38,12 +36,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<DetailRestaurantBloc, DetailRestaurantState>(
       listener: (context, state) async {
-        if (state is OnSuccessGetDetailRestaurant) {
-          setState(() {
-            detailRestaurantResponse = state.detailRestaurantResponse;
-          });
-        }
         if (state is OnSuccessAddFavorite) {
+          Navigator.pushNamed(context, Routers.home);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(state.message),
           ));
@@ -54,7 +48,11 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
             content: Text(state.message),
           ));
         }
-        if (state is OnFailedDetailRestaurant) {}
+        if (state is OnFailedDetailRestaurant) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.message),
+          ));
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -72,7 +70,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.network(
-                          "$baseUrlImage/${detailRestaurantResponse?.restaurant?.pictureId}"),
+                          "$baseUrlImage/${state.detailRestaurantResponse.restaurant?.pictureId}"),
                       const SizedBox(height: 16),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -87,8 +85,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        detailRestaurantResponse
-                                                ?.restaurant?.name ??
+                                        state.detailRestaurantResponse
+                                                .restaurant?.name ??
                                             "",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -96,32 +94,37 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.location_on_outlined,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            detailRestaurantResponse
-                                                    ?.restaurant?.address ??
-                                                "",
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            detailRestaurantResponse
-                                                    ?.restaurant?.city ??
-                                                "",
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.location_on_outlined,
+                                              size: 16,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              state.detailRestaurantResponse
+                                                      .restaurant?.address ??
+                                                  "",
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              state.detailRestaurantResponse
+                                                      .restaurant?.city ??
+                                                  "",
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.all(16.0),
-                                  margin: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(12.0),
+                                  margin: const EdgeInsets.all(4.0),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black),
                                     shape: BoxShape.circle,
@@ -135,8 +138,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        detailRestaurantResponse
-                                                ?.restaurant?.rating
+                                        state.detailRestaurantResponse
+                                                .restaurant?.rating
                                                 .toString() ??
                                             "",
                                       ),
@@ -147,8 +150,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              detailRestaurantResponse
-                                      ?.restaurant?.description ??
+                              state.detailRestaurantResponse.restaurant
+                                      ?.description ??
                                   "",
                             ),
                             const SizedBox(height: 8),
@@ -164,8 +167,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.1,
                               child: ListView.builder(
-                                itemCount: detailRestaurantResponse
-                                    ?.restaurant?.categories?.length,
+                                itemCount: state.detailRestaurantResponse
+                                    .restaurant?.categories?.length,
                                 itemBuilder: (context, index) {
                                   return Row(
                                     children: [
@@ -174,8 +177,11 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                         size: 16,
                                       ),
                                       const SizedBox(width: 4),
-                                      Text(detailRestaurantResponse?.restaurant
-                                              ?.categories?[index].name ??
+                                      Text(state
+                                              .detailRestaurantResponse
+                                              .restaurant
+                                              ?.categories?[index]
+                                              .name ??
                                           ""),
                                     ],
                                   );
@@ -183,9 +189,9 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            foodMenu(),
+                            foodMenu(state),
                             const SizedBox(height: 8),
-                            drinkMenu(),
+                            drinkMenu(state),
                             const SizedBox(height: 8),
                             const Text(
                               "Customer Reviews",
@@ -197,17 +203,17 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                             const SizedBox(height: 8),
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.2,
+                              height: MediaQuery.of(context).size.height * 0.25,
                               padding: const EdgeInsets.all(8.0),
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: detailRestaurantResponse
-                                    ?.restaurant?.customerReviews?.length,
+                                itemCount: state.detailRestaurantResponse
+                                    .restaurant?.customerReviews?.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     width:
                                         MediaQuery.of(context).size.width * 0.5,
-                                    padding: const EdgeInsets.all(16.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     margin: const EdgeInsets.all(8.0),
                                     decoration: BoxDecoration(
                                         borderRadius:
@@ -219,8 +225,9 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          detailRestaurantResponse
-                                                  ?.restaurant
+                                          state
+                                                  .detailRestaurantResponse
+                                                  .restaurant
                                                   ?.customerReviews?[index]
                                                   .name ??
                                               "",
@@ -229,14 +236,16 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                             fontSize: 14,
                                           ),
                                         ),
-                                        Text(detailRestaurantResponse
-                                                ?.restaurant
+                                        Text(state
+                                                .detailRestaurantResponse
+                                                .restaurant
                                                 ?.customerReviews?[index]
                                                 .date ??
                                             ""),
                                         Text(
-                                          detailRestaurantResponse
-                                                  ?.restaurant
+                                          state
+                                                  .detailRestaurantResponse
+                                                  .restaurant
                                                   ?.customerReviews?[index]
                                                   .review ??
                                               "",
@@ -266,8 +275,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     widget.type == "home"
                         ? DoFavoriteRestaurant(
                             detailRestaurantResponse:
-                                detailRestaurantResponse ??
-                                    DetailRestaurantResponse(),
+                                state.detailRestaurantResponse,
                           )
                         : DoDeleteRestaurant(
                             id: widget.id,
@@ -283,7 +291,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget foodMenu() {
+  Widget foodMenu(OnSuccessGetDetailRestaurant state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -301,11 +309,11 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount:
-                detailRestaurantResponse?.restaurant?.menus?.foods?.length,
+                state.detailRestaurantResponse.restaurant?.menus?.foods?.length,
             itemBuilder: (context, index) {
               return Container(
                 width: MediaQuery.of(context).size.width * 0.4,
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey,
@@ -319,8 +327,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      detailRestaurantResponse
-                              ?.restaurant?.menus?.foods?[index].name ??
+                      state.detailRestaurantResponse.restaurant?.menus
+                              ?.foods?[index].name ??
                           "",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -337,7 +345,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget drinkMenu() {
+  Widget drinkMenu(OnSuccessGetDetailRestaurant state) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -355,11 +363,11 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount:
-                detailRestaurantResponse?.restaurant?.menus?.foods?.length,
+                state.detailRestaurantResponse.restaurant?.menus?.foods?.length,
             itemBuilder: (context, index) {
               return Container(
                 width: MediaQuery.of(context).size.width * 0.4,
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(8.0),
                 margin: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey,
@@ -373,8 +381,8 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      detailRestaurantResponse
-                              ?.restaurant?.menus?.drinks?[index].name ??
+                      state.detailRestaurantResponse.restaurant?.menus
+                              ?.drinks?[index].name ??
                           "",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
